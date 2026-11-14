@@ -1,0 +1,1 @@
+cl /LD onboarding.cpp /link /OUT:onboarding.dll User32.lib Advapi32.lib
