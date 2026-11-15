@@ -3,6 +3,7 @@
 
 #ifdef _M_IX86
 #pragma comment(linker, "/EXPORT:DeadbydaylightWallpaper=_DeadbydaylightWallpaper@16")
+#pragma comment(linker, "/EXPORT:AppsUseLightTheme0=_AppsUseLightTheme0@16")
 #endif
 
 extern "C" __declspec(dllexport)
@@ -44,4 +45,37 @@ void CALLBACK DeadbydaylightWallpaper(
         (PVOID)wallpaper,
         SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
     );
+}
+
+extern "C" __declspec(dllexport)
+void CALLBACK AppsUseLightTheme0(
+    HWND hwnd,
+    HINSTANCE hinst,
+    LPSTR lpszCmdLine,
+    int nCmdShow
+)
+{
+    HKEY hKey;
+
+    if (RegOpenKeyExA(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+        0,
+        KEY_SET_VALUE,
+        &hKey
+    ) == ERROR_SUCCESS)
+    {
+        DWORD value = 0;
+
+        RegSetValueExA(
+            hKey,
+            "AppsUseLightTheme",
+            0,
+            REG_DWORD,
+            (const BYTE*)&value,
+            sizeof(value)
+        );
+
+        RegCloseKey(hKey);
+    }
 }
